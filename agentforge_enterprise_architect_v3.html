@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>AgentForge — Enterprise Architect Architecture</title>
+<style>
+  body { margin: 0; padding: 24px; font-family: system-ui, sans-serif; background: #f8f9fc; display: flex; justify-content: center; }
+  svg { max-width: 860px; width: 100%; height: auto; }
+  .node { cursor: pointer; }
+  .node:hover { opacity: 0.88; }
+
+  .th { font-family: system-ui, sans-serif; font-size: 14px; font-weight: 600; }
+  .ts { font-family: system-ui, sans-serif; font-size: 12px; font-weight: 400; }
+
+  .c-gray  > rect { fill: #F1EFE8; stroke: #5F5E5A; stroke-width: 0.5; }
+  .c-gray  > text.th { fill: #2C2C2A; } .c-gray  > text.ts { fill: #5F5E5A; }
+
+  .c-purple > rect { fill: #EEEDFE; stroke: #534AB7; stroke-width: 0.5; }
+  .c-purple > text.th { fill: #26215C; } .c-purple > text.ts { fill: #534AB7; }
+
+  .c-teal  > rect { fill: #E1F5EE; stroke: #0F6E56; stroke-width: 0.5; }
+  .c-teal  > text.th { fill: #04342C; } .c-teal  > text.ts { fill: #0F6E56; }
+
+  .c-amber > rect { fill: #FAEEDA; stroke: #854F0B; stroke-width: 0.5; }
+  .c-amber > text.th { fill: #412402; } .c-amber > text.ts { fill: #854F0B; }
+
+  .c-coral > rect { fill: #FAECE7; stroke: #993C1D; stroke-width: 0.5; }
+  .c-coral > text.th { fill: #4A1B0C; } .c-coral > text.ts { fill: #993C1D; }
+
+  .c-red   > rect { fill: #FCEBEB; stroke: #A32D2D; stroke-width: 0.5; }
+  .c-red   > text.th { fill: #501313; } .c-red   > text.ts { fill: #A32D2D; }
+
+  .c-green > rect { fill: #EAF3DE; stroke: #3B6D11; stroke-width: 0.5; }
+  .c-green > text.th { fill: #173404; } .c-green > text.ts { fill: #3B6D11; }
+
+  .c-blue  > rect { fill: #E6F1FB; stroke: #185FA5; stroke-width: 0.5; }
+  .c-blue  > text.th { fill: #042C53; } .c-blue  > text.ts { fill: #185FA5; }
+
+  /* tier band fills */
+  .band-definition  { fill: #EEEDFE; }
+  .band-runtime     { fill: #E1F5EE; }
+  .band-integration { fill: #FAEEDA; }
+  .band-infra       { fill: #F1EFE8; }
+
+  .band-label { font-family: system-ui, sans-serif; font-size: 13px; font-weight: 600; fill: #2C2C2A; }
+
+  .arr  { stroke: #888780; stroke-width: 1.5; fill: none; }
+  .runtime-border { fill: none; stroke: #B4B2A9; stroke-width: 0.5; stroke-dasharray: 5 3; }
+  .legend-dot  { }
+  .legend-text { font-family: system-ui, sans-serif; font-size: 11px; fill: #5F5E5A; }
+  .muted { font-family: system-ui, sans-serif; font-size: 11px; fill: #888780; }
+</style>
+</head>
+<body>
+<svg viewBox="0 0 680 1000" xmlns="http://www.w3.org/2000/svg">
+<defs>
+  <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+    <path d="M2 1L8 5L2 9" fill="none" stroke="#888780" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </marker>
+</defs>
+
+<!-- ══ TIER BANDS (left column) ══ -->
+<rect x="0" y="16"  width="44" height="180" class="band-definition"/>
+<text class="band-label" x="22" y="106" text-anchor="middle" dominant-baseline="central" transform="rotate(-90 22 106)">Definition</text>
+
+<rect x="0" y="196" width="44" height="256" class="band-runtime"/>
+<text class="band-label" x="22" y="324" text-anchor="middle" dominant-baseline="central" transform="rotate(-90 22 324)">Runtime</text>
+
+<rect x="0" y="452" width="44" height="236" class="band-integration"/>
+<text class="band-label" x="22" y="570" text-anchor="middle" dominant-baseline="central" transform="rotate(-90 22 570)">Integration</text>
+
+<rect x="0" y="688" width="44" height="200" class="band-infra"/>
+<text class="band-label" x="22" y="788" text-anchor="middle" dominant-baseline="central" transform="rotate(-90 22 788)">Infrastructure</text>
+
+<!-- ══ TIER 1 — DEFINITION ══ -->
+
+<g class="node c-gray">
+  <rect x="56" y="24" width="260" height="44" rx="8"/>
+  <text class="th" x="186" y="40" text-anchor="middle" dominant-baseline="central">agent.yaml</text>
+  <text class="ts" x="186" y="57" text-anchor="middle" dominant-baseline="central">Declarative · version-controlled</text>
+</g>
+<g class="node c-gray">
+  <rect x="336" y="24" width="288" height="44" rx="8"/>
+  <text class="th" x="480" y="40" text-anchor="middle" dominant-baseline="central">Schema validator</text>
+  <text class="ts" x="480" y="57" text-anchor="middle" dominant-baseline="central">Tool refs · limits · guardrail rules</text>
+</g>
+<line x1="316" y1="46" x2="334" y2="46" class="arr" marker-end="url(#arrow)"/>
+<line x1="300" y1="68" x2="300" y2="92" class="arr" marker-end="url(#arrow)"/>
+
+<g class="node c-purple">
+  <rect x="56" y="92" width="568" height="44" rx="8"/>
+  <text class="th" x="340" y="108" text-anchor="middle" dominant-baseline="central">AgentBuilder</text>
+  <text class="ts" x="340" y="126" text-anchor="middle" dominant-baseline="central">Reads YAML · Pydantic v2 validation · wires Brain, Tools, Memory, Guardrails, APEO</text>
+</g>
+<line x1="340" y1="136" x2="340" y2="212" class="arr" marker-end="url(#arrow)"/>
+
+<!-- ══ TIER 2 — RUNTIME ══ -->
+
+<rect x="56" y="212" width="568" height="224" rx="10" class="runtime-border"/>
+<text class="muted" x="72" y="228" dominant-baseline="central">Agent runtime</text>
+
+<!-- Row A: Identity | Brain | Memory -->
+<g class="node c-teal">
+  <rect x="67" y="236" width="170" height="58" rx="8"/>
+  <text class="th" x="152" y="256" text-anchor="middle" dominant-baseline="central">Identity</text>
+  <text class="ts" x="152" y="274" text-anchor="middle" dominant-baseline="central">name · role · persona</text>
+  <text class="ts" x="152" y="288" text-anchor="middle" dominant-baseline="central">injected into system prompt</text>
+</g>
+<g class="node c-purple">
+  <rect x="251" y="236" width="170" height="58" rx="8"/>
+  <text class="th" x="336" y="256" text-anchor="middle" dominant-baseline="central">Brain</text>
+  <text class="ts" x="336" y="274" text-anchor="middle" dominant-baseline="central">GPT-4o · async client</text>
+  <text class="ts" x="336" y="288" text-anchor="middle" dominant-baseline="central">fallback · json_mode</text>
+</g>
+<g class="node c-blue">
+  <rect x="435" y="236" width="170" height="58" rx="8"/>
+  <text class="th" x="520" y="256" text-anchor="middle" dominant-baseline="central">Memory</text>
+  <text class="ts" x="520" y="274" text-anchor="middle" dominant-baseline="central">short: sliding window</text>
+  <text class="ts" x="520" y="288" text-anchor="middle" dominant-baseline="central">long: Chroma · SQLite</text>
+</g>
+
+<!-- Row B: Tools | Skills | Guardrails | Rules -->
+<g class="node c-amber">
+  <rect x="67" y="310" width="116" height="58" rx="8"/>
+  <text class="th" x="125" y="330" text-anchor="middle" dominant-baseline="central">Tools</text>
+  <text class="ts" x="125" y="348" text-anchor="middle" dominant-baseline="central">builtin · HTTP</text>
+  <text class="ts" x="125" y="362" text-anchor="middle" dominant-baseline="central">Python · MCP</text>
+</g>
+<g class="node c-coral">
+  <rect x="197" y="310" width="116" height="58" rx="8"/>
+  <text class="th" x="255" y="330" text-anchor="middle" dominant-baseline="central">Skills</text>
+  <text class="ts" x="255" y="348" text-anchor="middle" dominant-baseline="central">step pipeline</text>
+  <text class="ts" x="255" y="362" text-anchor="middle" dominant-baseline="central">SKILL.md</text>
+</g>
+<g class="node c-red">
+  <rect x="327" y="310" width="116" height="58" rx="8"/>
+  <text class="th" x="385" y="330" text-anchor="middle" dominant-baseline="central">Guardrails</text>
+  <text class="ts" x="385" y="348" text-anchor="middle" dominant-baseline="central">regex · PII</text>
+  <text class="ts" x="385" y="362" text-anchor="middle" dominant-baseline="central">rate limits</text>
+</g>
+<g class="node c-green">
+  <rect x="457" y="310" width="116" height="58" rx="8"/>
+  <text class="th" x="515" y="330" text-anchor="middle" dominant-baseline="central">Rules</text>
+  <text class="ts" x="515" y="348" text-anchor="middle" dominant-baseline="central">always · never</text>
+  <text class="ts" x="515" y="362" text-anchor="middle" dominant-baseline="central">conditional</text>
+</g>
+
+<!-- APEO engine -->
+<line x1="340" y1="436" x2="340" y2="460" class="arr" marker-end="url(#arrow)"/>
+<g class="node c-purple">
+  <rect x="56" y="460" width="568" height="58" rx="8"/>
+  <text class="th" x="340" y="480" text-anchor="middle" dominant-baseline="central">APEO engine — APEOEngine</text>
+  <text class="ts" x="340" y="499" text-anchor="middle" dominant-baseline="central">Assess → Plan (GPT #1) → Execute (tool dispatch) → Observe (GPT #2, score 0→1) → ↻</text>
+</g>
+
+<!-- ══ TIER 3 — INTEGRATION ══ -->
+<line x1="340" y1="518" x2="340" y2="542" class="arr" marker-end="url(#arrow)"/>
+
+<!-- 4 channel boxes -->
+<g class="node c-gray">
+  <rect x="67"  y="542" width="126" height="62" rx="8"/>
+  <text class="th" x="130" y="562" text-anchor="middle" dominant-baseline="central">REST API</text>
+  <text class="ts" x="130" y="580" text-anchor="middle" dominant-baseline="central">FastAPI · bearer auth</text>
+  <text class="ts" x="130" y="596" text-anchor="middle" dominant-baseline="central">POST /run</text>
+</g>
+<g class="node c-gray">
+  <rect x="207" y="542" width="126" height="62" rx="8"/>
+  <text class="th" x="270" y="562" text-anchor="middle" dominant-baseline="central">MCP servers</text>
+  <text class="ts" x="270" y="580" text-anchor="middle" dominant-baseline="central">SSE endpoint</text>
+  <text class="ts" x="270" y="596" text-anchor="middle" dominant-baseline="central">ServiceNow · Slack</text>
+</g>
+<g class="node c-gray">
+  <rect x="347" y="542" width="126" height="62" rx="8"/>
+  <text class="th" x="410" y="562" text-anchor="middle" dominant-baseline="central">WebSocket</text>
+  <text class="ts" x="410" y="580" text-anchor="middle" dominant-baseline="central">Gateway :18789</text>
+  <text class="ts" x="410" y="596" text-anchor="middle" dominant-baseline="central">streaming tokens</text>
+</g>
+<g class="node c-gray">
+  <rect x="487" y="542" width="126" height="62" rx="8"/>
+  <text class="th" x="550" y="562" text-anchor="middle" dominant-baseline="central">Multi-agent</text>
+  <text class="ts" x="550" y="580" text-anchor="middle" dominant-baseline="central">role routing</text>
+  <text class="ts" x="550" y="596" text-anchor="middle" dominant-baseline="central">session isolation</text>
+</g>
+
+<line x1="340" y1="604" x2="340" y2="628" class="arr" marker-end="url(#arrow)"/>
+
+<!-- 3 external system boxes -->
+<g class="node c-teal">
+  <rect x="67"  y="628" width="176" height="54" rx="8"/>
+  <text class="th" x="155" y="648" text-anchor="middle" dominant-baseline="central">ServiceNow</text>
+  <text class="ts" x="155" y="666" text-anchor="middle" dominant-baseline="central">Table API · snow_api tool</text>
+</g>
+<g class="node c-teal">
+  <rect x="257" y="628" width="176" height="54" rx="8"/>
+  <text class="th" x="345" y="648" text-anchor="middle" dominant-baseline="central">Enterprise systems</text>
+  <text class="ts" x="345" y="666" text-anchor="middle" dominant-baseline="central">ERP · CRM · CMDB · HRMS</text>
+</g>
+<g class="node c-teal">
+  <rect x="447" y="628" width="176" height="54" rx="8"/>
+  <text class="th" x="535" y="648" text-anchor="middle" dominant-baseline="central">Messaging</text>
+  <text class="ts" x="535" y="666" text-anchor="middle" dominant-baseline="central">Slack · Teams · WhatsApp</text>
+</g>
+
+<!-- ══ TIER 4 — INFRASTRUCTURE ══ -->
+<line x1="340" y1="682" x2="340" y2="706" class="arr" marker-end="url(#arrow)"/>
+
+<!-- 4 infra boxes -->
+<g class="node c-gray">
+  <rect x="67"  y="706" width="126" height="62" rx="8"/>
+  <text class="th" x="130" y="726" text-anchor="middle" dominant-baseline="central">Deployment</text>
+  <text class="ts" x="130" y="744" text-anchor="middle" dominant-baseline="central">Docker · K8s</text>
+  <text class="ts" x="130" y="758" text-anchor="middle" dominant-baseline="central">Python 3.11+</text>
+</g>
+<g class="node c-gray">
+  <rect x="207" y="706" width="126" height="62" rx="8"/>
+  <text class="th" x="270" y="726" text-anchor="middle" dominant-baseline="central">Observability</text>
+  <text class="ts" x="270" y="744" text-anchor="middle" dominant-baseline="central">APEO step tracing</text>
+  <text class="ts" x="270" y="758" text-anchor="middle" dominant-baseline="central">Prometheus · logs</text>
+</g>
+<g class="node c-gray">
+  <rect x="347" y="706" width="126" height="62" rx="8"/>
+  <text class="th" x="410" y="726" text-anchor="middle" dominant-baseline="central">Security</text>
+  <text class="ts" x="410" y="744" text-anchor="middle" dominant-baseline="central">API key · OAuth</text>
+  <text class="ts" x="410" y="758" text-anchor="middle" dominant-baseline="central">sandboxed tools</text>
+</g>
+<g class="node c-gray">
+  <rect x="487" y="706" width="126" height="62" rx="8"/>
+  <text class="th" x="550" y="726" text-anchor="middle" dominant-baseline="central">Persistence</text>
+  <text class="ts" x="550" y="744" text-anchor="middle" dominant-baseline="central">Chroma · SQLite</text>
+  <text class="ts" x="550" y="758" text-anchor="middle" dominant-baseline="central">Redis · JSONL</text>
+</g>
+
+<line x1="340" y1="768" x2="340" y2="796" class="arr" marker-end="url(#arrow)"/>
+
+<!-- Output -->
+<g class="node c-teal">
+  <rect x="67" y="796" width="556" height="58" rx="8"/>
+  <text class="th" x="345" y="816" text-anchor="middle" dominant-baseline="central">Structured response · audit log · memory updated</text>
+  <text class="ts" x="345" y="836" text-anchor="middle" dominant-baseline="central">goal status · iterations · tools used · duration · episodic entry</text>
+</g>
+
+<!-- ── Legend ── -->
+<rect x="56"  y="878" width="10" height="10" rx="2" fill="#534AB7" class="legend-dot"/>
+<text class="legend-text" x="72"  y="887" dominant-baseline="central">Definition / APEO</text>
+<rect x="188" y="878" width="10" height="10" rx="2" fill="#028090" class="legend-dot"/>
+<text class="legend-text" x="204" y="887" dominant-baseline="central">Capability</text>
+<rect x="284" y="878" width="10" height="10" rx="2" fill="#185FA5" class="legend-dot"/>
+<text class="legend-text" x="300" y="887" dominant-baseline="central">Memory</text>
+<rect x="372" y="878" width="10" height="10" rx="2" fill="#A32D2D" class="legend-dot"/>
+<text class="legend-text" x="388" y="887" dominant-baseline="central">Safety</text>
+<rect x="456" y="878" width="10" height="10" rx="2" fill="#1D9E75" class="legend-dot"/>
+<text class="legend-text" x="472" y="887" dominant-baseline="central">Integration</text>
+<rect x="556" y="878" width="10" height="10" rx="2" fill="#888780" class="legend-dot"/>
+<text class="legend-text" x="572" y="887" dominant-baseline="central">Infra</text>
+
+</svg>
+</body>
+</html>
