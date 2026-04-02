@@ -1,0 +1,96 @@
+version: "3.9"
+
+# ---------------------------------------------------------------------------
+# MCP Language Benchmark — spins up all three servers and the runner.
+#
+# Usage:
+#   docker-compose up --build          # run full benchmark
+#   docker-compose up python           # start only the Python server
+#   docker-compose logs -f runner      # tail runner output
+# ---------------------------------------------------------------------------
+
+services:
+
+  # --------------------------------------------------------------------------
+  # Python MCP server (FastMCP + uvicorn) — port 8001
+  # --------------------------------------------------------------------------
+  python:
+    build:
+      context: ./python
+      dockerfile: Dockerfile
+    image: mcp-benchmark-python:latest
+    ports:
+      - "8001:8001"
+    environment:
+      FASTMCP_HOST: "0.0.0.0"
+      FASTMCP_PORT: "8001"
+    healthcheck:
+      test: ["CMD", "python", "-c",
+             "import urllib.request; urllib.request.urlopen('http://localhost:8001/health')"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 15s
+
+  # --------------------------------------------------------------------------
+  # TypeScript MCP server (Express 4 + @modelcontextprotocol/sdk) — port 8002
+  # --------------------------------------------------------------------------
+  typescript:
+    build:
+      context: ./typescript
+      dockerfile: Dockerfile
+    image: mcp-benchmark-typescript:latest
+    ports:
+      - "8002:8002"
+    environment:
+      PORT: "8002"
+    healthcheck:
+      test: ["CMD", "node", "-e",
+             "require('http').get('http://localhost:8002/health', r => process.exit(r.statusCode===200?0:1)).on('error',()=>process.exit(1))"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 15s
+
+  # --------------------------------------------------------------------------
+  # .NET MCP server (ASP.NET Core + ModelContextProtocol) — port 8003
+  # --------------------------------------------------------------------------
+  dotnet:
+    build:
+      context: ./dotnet
+      dockerfile: Dockerfile
+    image: mcp-benchmark-dotnet:latest
+    ports:
+      - "8003:8003"
+    environment:
+      PORT: "8003"
+      ASPNETCORE_URLS: "http://+:8003"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8003/health"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 20s
+
+  # --------------------------------------------------------------------------
+  # Benchmark runner — waits for all servers, runs all scenarios, writes report
+  # --------------------------------------------------------------------------
+  runner:
+    build:
+      context: ./runner
+      dockerfile: Dockerfile
+    image: mcp-benchmark-runner:latest
+    depends_on:
+      python:
+        condition: service_healthy
+      typescript:
+        condition: service_healthy
+      dotnet:
+        condition: service_healthy
+    environment:
+      PYTHON_URL: "http://python:8001"
+      TS_URL:     "http://typescript:8002"
+      DOTNET_URL: "http://dotnet:8003"
+    volumes:
+      - ./results:/app/../results   # write reports to benchmark/results/
+    restart: "no"
