@@ -244,6 +244,127 @@ def scenario_repeated_keys() -> dict[str, Any]:
 
 
 # ---------------------------------------------------------------------------
+# Large-data scenarios
+# ---------------------------------------------------------------------------
+
+def scenario_large_numeric_array() -> dict[str, Any]:
+    """Large array of integers — e.g. time-series sensor readings (1 000 values)."""
+    import random
+    random.seed(42)
+    values = [random.randint(0, 9999) for _ in range(1000)]
+    return _build_result(
+        name="large_numeric_array",
+        description="1 000-element integer array (sensor readings)",
+        tool_result={"count": len(values), "values": values},
+    )
+
+
+def scenario_large_record_list() -> dict[str, Any]:
+    """
+    100 structured records — typical paginated DB query result.
+    Each record has 6 fields: id, name, score, active, region, ts.
+    Key overhead repeats 100x — the classic case where JSON wastes most.
+    """
+    regions = ["us-east", "eu-west", "ap-south"]
+    records = [
+        {
+            "id": 1000 + i,
+            "name": f"user_{i:04d}",
+            "score": round(50.0 + i * 0.47, 2),
+            "active": i % 3 != 0,
+            "region": regions[i % 3],
+            "ts": 1700000000 + i * 60,
+        }
+        for i in range(100)
+    ]
+    return _build_result(
+        name="large_record_list",
+        description="100 DB records × 6 fields (paginated query result)",
+        tool_result={"total": 100, "page": 1, "records": records},
+    )
+
+
+def scenario_large_string_blob() -> dict[str, Any]:
+    """
+    10 KB prose string — e.g. a document chunk retrieved by a RAG tool.
+    Tests the limit where string content completely dominates token count.
+    """
+    sentence = (
+        "The quick brown fox jumps over the lazy dog near the riverbank. "
+    )
+    text = (sentence * ((10 * 1024 // len(sentence)) + 1))[:10240]
+    return _build_result(
+        name="large_string_blob",
+        description="10 KB prose string (RAG document chunk)",
+        tool_result={"text": text, "length": len(text), "source": "doc-42"},
+    )
+
+
+def scenario_wide_flat_object() -> dict[str, Any]:
+    """
+    50-key flat object — e.g. a feature-flag map or config snapshot.
+    Maximises per-key JSON overhead on a single flat level.
+    """
+    flags = {f"feature_{i:02d}_enabled": (i % 4 != 0) for i in range(50)}
+    return _build_result(
+        name="wide_flat_object",
+        description="50-key flat boolean map (feature flags / config snapshot)",
+        tool_result=flags,
+    )
+
+
+def scenario_deeply_nested() -> dict[str, Any]:
+    """
+    5-level deep nesting — tests dot-notation key-length penalty at depth.
+    """
+    return _build_result(
+        name="deeply_nested",
+        description="5-level nested object (e.g. cloud resource hierarchy)",
+        tool_result={
+            "cloud": {
+                "provider": "aws",
+                "region": {
+                    "name": "us-east-1",
+                    "zone": {
+                        "id": "use1-az2",
+                        "resource": {
+                            "type": "ec2",
+                            "id": "i-0abc123def456",
+                            "state": "running",
+                            "cpu_pct": 42.7,
+                            "mem_pct": 61.3,
+                        },
+                    },
+                },
+            }
+        },
+    )
+
+
+def scenario_large_agent_log() -> dict[str, Any]:
+    """
+    100-step agent observation log — identical key structure repeated 100×.
+    This is the highest-volume real-world case for token savings.
+    """
+    steps = [
+        {
+            "step": i,
+            "tool": "fetch_mock" if i % 2 == 0 else "echo",
+            "tokens_in": 200 + i * 3,
+            "tokens_out": 80 + i,
+            "latency_ms": round(12.5 + i * 0.3, 1),
+            "ok": True,
+        }
+        for i in range(1, 101)
+    ]
+    return _build_result(
+        name="large_agent_log",
+        description="100-step agent observation log × 6 fields",
+        tool_result={"steps": steps, "total": 100, "elapsed_ms": 4823.1},
+    )
+
+
+# ---------------------------------------------------------------------------
 # Run all scenarios
 # ---------------------------------------------------------------------------
 
@@ -261,5 +382,12 @@ def run_all() -> list[dict[str, Any]]:
         scenario_validate_invalid,
         scenario_nested_metadata,
         scenario_repeated_keys,
+        # Large-data scenarios
+        scenario_large_numeric_array,
+        scenario_large_record_list,
+        scenario_large_string_blob,
+        scenario_wide_flat_object,
+        scenario_deeply_nested,
+        scenario_large_agent_log,
     ]
     return [fn() for fn in fns]
