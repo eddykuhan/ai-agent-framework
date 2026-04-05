@@ -52,7 +52,7 @@ def _build_markdown(results: list[dict[str, Any]], ts: str) -> str:
     a("# MCP Token-Consumption Benchmark: JSON vs TOON")
     a("")
     a(f"**Generated:** {ts.replace('_', ' ')} UTC  ")
-    a(f"**Tokenizer:** tiktoken `cl100k_base` (Claude / GPT-4 BPE approximation)  ")
+    a(f"**Tokenizer:** cl100k_base pre-tokenization pattern via `regex` (no download required)")
     a(f"**Scenarios:** {len(results)}  ")
     a("")
     a("## What is TOON?")
@@ -234,7 +234,7 @@ def _print_summary_table(results: list[dict[str, Any]]) -> None:
 def main() -> None:
     console.rule("[bold cyan]MCP Token Consumption Benchmark: JSON vs TOON[/bold cyan]")
     console.print()
-    console.print("Tokenizer: [cyan]tiktoken cl100k_base[/cyan] (Claude/GPT-4 BPE approx)")
+    console.print("Tokenizer: [cyan]cl100k_base pre-tokenization pattern[/cyan] (regex, no download)")
     console.print()
 
     console.print("Running scenarios…")

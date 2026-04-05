@@ -31,17 +31,24 @@ from __future__ import annotations
 import json
 from typing import Any
 
-import tiktoken
+import regex
 
 from toon_formatter import encode as toon_encode, mcp_envelope_json, mcp_envelope_toon
 
-# Shared tokenizer – cl100k_base is used by GPT-4 / text-embedding-3 and is a
-# reasonable proxy for Claude's BPE tokenizer.
-_ENC = tiktoken.get_encoding("cl100k_base")
+# Pre-tokenization pattern from the cl100k_base (GPT-4 / Claude) tokenizer.
+# This splits text into the same pre-token units as the full BPE tokenizer
+# without requiring a network download.  It gives an upper-bound token count
+# (BPE merges would further reduce it), but the *relative* comparison between
+# JSON and TOON is accurate.
+_CL100K_PAT = regex.compile(
+    r"""'(?i:[sdmt]|ll|ve|re)|[^\r\n\p{L}\p{N}]?\p{L}+|\p{N}{1,3}"""
+    r"""| ?[^\s\p{L}\p{N}]+[\r\n]*|\s*[\r\n]+|\s+(?!\S)|\s+"""
+)
 
 
 def _count_tokens(text: str) -> int:
-    return len(_ENC.encode(text))
+    """Count tokens using the cl100k_base pre-tokenization split pattern."""
+    return len(_CL100K_PAT.findall(text))
 
 
 def _build_result(

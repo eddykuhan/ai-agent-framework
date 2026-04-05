@@ -156,7 +156,8 @@ Each tool includes input guards (range checks, size limits) to test the security
 
 Compares token counts for MCP tool results serialized as **JSON** vs **TOON**
 (Token-Optimized Output Notation) across 11 representative payloads.
-Uses `tiktoken cl100k_base` as a Claude/GPT-4 BPE tokenizer approximation.
+Uses the cl100k_base pre-tokenization pattern (via `regex`, no network download)
+as a Claude/GPT-4 BPE tokenizer approximation.
 
 | # | Scenario | Payload description |
 |---|----------|---------------------|
