@@ -131,7 +131,29 @@ def _build_markdown(results: list[dict[str, Any]], ts: str) -> str:
     toon_savings     = [r["savings"]["toon_vs_json"]           for r in results]
     mcp_toon_savings = [r["savings"]["mcp_toon_vs_mcp_json"]   for r in results]
 
+    total_json      = sum(r["tokens"]["bare_json"] for r in results)
+    total_toon      = sum(r["tokens"]["bare_toon"] for r in results)
+    total_mcp_json  = sum(r["tokens"]["mcp_json"]  for r in results)
+    total_mcp_toon  = sum(r["tokens"]["mcp_toon"]  for r in results)
+    total_saved     = total_json     - total_toon
+    total_mcp_saved = total_mcp_json - total_mcp_toon
+
     a("## Aggregate Statistics")
+    a("")
+
+    # Total token consumption table
+    a("### Total Token Consumption (all scenarios combined)")
+    a("")
+    a("| Format | Total Tokens | Tokens Saved | Saving % |")
+    a("|--------|-------------:|-------------:|---------:|")
+    a(f"| Bare JSON  | {total_json:,} | — | — |")
+    a(f"| Bare TOON  | {total_toon:,} | {total_saved:,} | {_pct_str(round((1 - total_toon / total_json) * 100, 1))} |")
+    a(f"| MCP JSON envelope | {total_mcp_json:,} | — | — |")
+    a(f"| MCP TOON envelope | {total_mcp_toon:,} | {total_mcp_saved:,} | {_pct_str(round((1 - total_mcp_toon / total_mcp_json) * 100, 1))} |")
+    a("")
+
+    # Per-scenario saving distribution
+    a("### Per-Scenario Saving Distribution")
     a("")
     a("| Metric | Mean | Min | Max | Median |")
     a("|--------|-----:|----:|----:|-------:|")
@@ -211,18 +233,38 @@ def _print_summary_table(results: list[dict[str, Any]]) -> None:
     table.add_column("MCP TOON", justify="right")
     table.add_column("MCP saving", justify="right")
 
+    total_json     = sum(r["tokens"]["bare_json"] for r in results)
+    total_toon     = sum(r["tokens"]["bare_toon"] for r in results)
+    total_mcp_json = sum(r["tokens"]["mcp_json"]  for r in results)
+    total_mcp_toon = sum(r["tokens"]["mcp_toon"]  for r in results)
+
     for r in results:
         t = r["tokens"]
         s = r["savings"]
+        color = "red" if s["toon_vs_json"] > 0 else "green"
+        mcp_color = "red" if s["mcp_toon_vs_mcp_json"] > 0 else "green"
         table.add_row(
             r["name"],
             str(t["bare_json"]),
             str(t["bare_toon"]),
-            f"[green]{_pct_str(s['toon_vs_json'])}[/green]",
+            f"[{color}]{_pct_str(s['toon_vs_json'])}[/{color}]",
             str(t["mcp_json"]),
             str(t["mcp_toon"]),
-            f"[green]{_pct_str(s['mcp_toon_vs_mcp_json'])}[/green]",
+            f"[{mcp_color}]{_pct_str(s['mcp_toon_vs_mcp_json'])}[/{mcp_color}]",
         )
+
+    saved     = total_json - total_toon
+    mcp_saved = total_mcp_json - total_mcp_toon
+    table.add_section()
+    table.add_row(
+        "[bold]TOTAL[/bold]",
+        f"[bold]{total_json:,}[/bold]",
+        f"[bold]{total_toon:,}[/bold]",
+        f"[bold green]-{saved:,} ({_pct_str(round((1 - total_toon/total_json)*100,1))})[/bold green]",
+        f"[bold]{total_mcp_json:,}[/bold]",
+        f"[bold]{total_mcp_toon:,}[/bold]",
+        f"[bold green]-{mcp_saved:,} ({_pct_str(round((1 - total_mcp_toon/total_mcp_json)*100,1))})[/bold green]",
+    )
 
     console.print(table)
 
