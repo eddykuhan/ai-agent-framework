@@ -35,6 +35,7 @@ from scenarios import (
     scenario_security,
     scenario_throughput,
 )
+from token_scenarios import run_all as run_token_scenarios
 
 console = Console()
 
@@ -167,6 +168,30 @@ async def main() -> None:
         except Exception as exc:
             console.print(f"[red]Fatal error benchmarking {lang}: {exc}[/red]")
             all_results[lang] = {"fatal_error": str(exc)}
+
+    # ---- Token consumption: JSON vs TOON ----------------------------------
+    _hdr("Token consumption: JSON vs TOON")
+    console.print("  Running token-consumption scenarios (no live servers needed)…")
+    try:
+        token_results = run_token_scenarios()
+        all_results["token_consumption"] = {
+            "scenarios": len(token_results),
+            "results": [
+                {k: v for k, v in r.items()
+                 if k not in {"bare_json", "bare_toon", "mcp_json", "mcp_toon", "tool_result"}}
+                for r in token_results
+            ],
+        }
+        import statistics as _stats
+        mcp_savings = [r["savings"]["mcp_toon_vs_mcp_json"] for r in token_results]
+        avg_saving = round(_stats.mean(mcp_savings), 1)
+        console.print(
+            f"  ✅ {len(token_results)} scenarios complete — "
+            f"MCP TOON saves [green]~{avg_saving}%[/green] tokens vs MCP JSON on average"
+        )
+    except Exception as exc:
+        console.print(f"  [yellow]⚠️  Token benchmark skipped: {exc}[/yellow]")
+        all_results["token_consumption"] = {"error": str(exc)}
 
     # ---- Generate report -----------------------------------------------
     _hdr("Generating report")

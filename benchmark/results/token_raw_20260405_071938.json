@@ -1,0 +1,381 @@
+[
+  {
+    "name": "echo_small",
+    "description": "echo tool: 5-char string",
+    "tool_result": {
+      "echo": "hello",
+      "length": 5
+    },
+    "tokens": {
+      "bare_json": 9,
+      "bare_toon": 5,
+      "mcp_json": 29,
+      "mcp_toon": 8
+    },
+    "chars": {
+      "bare_json": 27,
+      "bare_toon": 19,
+      "mcp_json": 106,
+      "mcp_toon": 24
+    },
+    "savings": {
+      "toon_vs_json": 44.4,
+      "mcp_toon_vs_mcp_json": 72.4,
+      "chars_toon_vs_json": 29.6,
+      "chars_mcp_toon_vs_json": 77.4
+    }
+  },
+  {
+    "name": "echo_medium",
+    "description": "echo tool: 100-char string",
+    "tool_result": {
+      "echo": "The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick ",
+      "length": 100
+    },
+    "tokens": {
+      "bare_json": 30,
+      "bare_toon": 28,
+      "mcp_json": 50,
+      "mcp_toon": 31
+    },
+    "chars": {
+      "bare_json": 124,
+      "bare_toon": 118,
+      "mcp_json": 203,
+      "mcp_toon": 123
+    },
+    "savings": {
+      "toon_vs_json": 6.7,
+      "mcp_toon_vs_mcp_json": 38.0,
+      "chars_toon_vs_json": 4.8,
+      "chars_mcp_toon_vs_json": 39.4
+    }
+  },
+  {
+    "name": "echo_large",
+    "description": "echo tool: 1 024-char string",
+    "tool_result": {
+      "echo": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "length": 1024
+    },
+    "tokens": {
+      "bare_json": 25,
+      "bare_toon": 21,
+      "mcp_json": 45,
+      "mcp_toon": 24
+    },
+    "chars": {
+      "bare_json": 1049,
+      "bare_toon": 1041,
+      "mcp_json": 1128,
+      "mcp_toon": 1046
+    },
+    "savings": {
+      "toon_vs_json": 16.0,
+      "mcp_toon_vs_mcp_json": 46.7,
+      "chars_toon_vs_json": 0.8,
+      "chars_mcp_toon_vs_json": 7.3
+    }
+  },
+  {
+    "name": "fibonacci",
+    "description": "fibonacci tool: n=30, result=832040",
+    "tool_result": {
+      "n": 30,
+      "result": 832040,
+      "elapsed_ms": 12.345
+    },
+    "tokens": {
+      "bare_json": 17,
+      "bare_toon": 13,
+      "mcp_json": 37,
+      "mcp_toon": 16
+    },
+    "chars": {
+      "bare_json": 44,
+      "bare_toon": 36,
+      "mcp_json": 123,
+      "mcp_toon": 41
+    },
+    "savings": {
+      "toon_vs_json": 23.5,
+      "mcp_toon_vs_mcp_json": 56.8,
+      "chars_toon_vs_json": 18.2,
+      "chars_mcp_toon_vs_json": 66.7
+    }
+  },
+  {
+    "name": "fetch_mock",
+    "description": "fetch_mock tool: simulated HTTP response metadata",
+    "tool_result": {
+      "url": "https://example.com",
+      "delay_ms": 50,
+      "status": 200,
+      "body_length": 1024
+    },
+    "tokens": {
+      "bare_json": 23,
+      "bare_toon": 19,
+      "mcp_json": 43,
+      "mcp_toon": 22
+    },
+    "chars": {
+      "bare_json": 75,
+      "bare_toon": 65,
+      "mcp_json": 158,
+      "mcp_toon": 70
+    },
+    "savings": {
+      "toon_vs_json": 17.4,
+      "mcp_toon_vs_mcp_json": 48.8,
+      "chars_toon_vs_json": 13.3,
+      "chars_mcp_toon_vs_json": 55.7
+    }
+  },
+  {
+    "name": "batch_small",
+    "description": "batch_process tool: 10 items",
+    "tool_result": {
+      "count": 10,
+      "elapsed_ms": 5.231,
+      "concurrency": 5
+    },
+    "tokens": {
+      "bare_json": 16,
+      "bare_toon": 12,
+      "mcp_json": 36,
+      "mcp_toon": 15
+    },
+    "chars": {
+      "bare_json": 47,
+      "bare_toon": 39,
+      "mcp_json": 126,
+      "mcp_toon": 44
+    },
+    "savings": {
+      "toon_vs_json": 25.0,
+      "mcp_toon_vs_mcp_json": 58.3,
+      "chars_toon_vs_json": 17.0,
+      "chars_mcp_toon_vs_json": 65.1
+    }
+  },
+  {
+    "name": "batch_large",
+    "description": "batch_process tool: 500 items",
+    "tool_result": {
+      "count": 500,
+      "elapsed_ms": 234.567,
+      "concurrency": 10
+    },
+    "tokens": {
+      "bare_json": 16,
+      "bare_toon": 12,
+      "mcp_json": 36,
+      "mcp_toon": 15
+    },
+    "chars": {
+      "bare_json": 51,
+      "bare_toon": 43,
+      "mcp_json": 130,
+      "mcp_toon": 48
+    },
+    "savings": {
+      "toon_vs_json": 25.0,
+      "mcp_toon_vs_mcp_json": 58.3,
+      "chars_toon_vs_json": 15.7,
+      "chars_mcp_toon_vs_json": 63.1
+    }
+  },
+  {
+    "name": "validate_valid",
+    "description": "validate_schema tool: valid data",
+    "tool_result": {
+      "valid": true,
+      "errors": []
+    },
+    "tokens": {
+      "bare_json": 7,
+      "bare_toon": 4,
+      "mcp_json": 27,
+      "mcp_toon": 7
+    },
+    "chars": {
+      "bare_json": 26,
+      "bare_toon": 17,
+      "mcp_json": 103,
+      "mcp_toon": 22
+    },
+    "savings": {
+      "toon_vs_json": 42.9,
+      "mcp_toon_vs_mcp_json": 74.1,
+      "chars_toon_vs_json": 34.6,
+      "chars_mcp_toon_vs_json": 78.6
+    }
+  },
+  {
+    "name": "validate_invalid",
+    "description": "validate_schema tool: invalid data with two errors",
+    "tool_result": {
+      "valid": false,
+      "errors": [
+        "'name' is a required property",
+        "42 is not of type 'string'"
+      ]
+    },
+    "tokens": {
+      "bare_json": 22,
+      "bare_toon": 19,
+      "mcp_json": 42,
+      "mcp_toon": 22
+    },
+    "chars": {
+      "bare_json": 87,
+      "bare_toon": 73,
+      "mcp_json": 168,
+      "mcp_toon": 78
+    },
+    "savings": {
+      "toon_vs_json": 13.6,
+      "mcp_toon_vs_mcp_json": 47.6,
+      "chars_toon_vs_json": 16.1,
+      "chars_mcp_toon_vs_json": 53.6
+    }
+  },
+  {
+    "name": "nested_metadata",
+    "description": "Rich result with nested metadata (simulated agent observation)",
+    "tool_result": {
+      "status": "success",
+      "data": {
+        "id": "record-42",
+        "value": 99.9,
+        "tags": [
+          "alpha",
+          "beta",
+          "gamma"
+        ]
+      },
+      "meta": {
+        "elapsed_ms": 18.7,
+        "cached": false,
+        "source": "db-primary",
+        "version": 3
+      }
+    },
+    "tokens": {
+      "bare_json": 49,
+      "bare_toon": 47,
+      "mcp_json": 69,
+      "mcp_toon": 50
+    },
+    "chars": {
+      "bare_json": 167,
+      "bare_toon": 164,
+      "mcp_json": 272,
+      "mcp_toon": 169
+    },
+    "savings": {
+      "toon_vs_json": 4.1,
+      "mcp_toon_vs_mcp_json": 27.5,
+      "chars_toon_vs_json": 1.8,
+      "chars_mcp_toon_vs_json": 37.9
+    }
+  },
+  {
+    "name": "repeated_keys",
+    "description": "Agent observation log: 10 entries with identical key structure",
+    "tool_result": {
+      "entries": [
+        {
+          "step": 1,
+          "tool": "echo",
+          "tokens_in": 121,
+          "tokens_out": 31,
+          "ok": true
+        },
+        {
+          "step": 2,
+          "tool": "echo",
+          "tokens_in": 122,
+          "tokens_out": 32,
+          "ok": true
+        },
+        {
+          "step": 3,
+          "tool": "echo",
+          "tokens_in": 123,
+          "tokens_out": 33,
+          "ok": true
+        },
+        {
+          "step": 4,
+          "tool": "echo",
+          "tokens_in": 124,
+          "tokens_out": 34,
+          "ok": true
+        },
+        {
+          "step": 5,
+          "tool": "echo",
+          "tokens_in": 125,
+          "tokens_out": 35,
+          "ok": true
+        },
+        {
+          "step": 6,
+          "tool": "echo",
+          "tokens_in": 126,
+          "tokens_out": 36,
+          "ok": true
+        },
+        {
+          "step": 7,
+          "tool": "echo",
+          "tokens_in": 127,
+          "tokens_out": 37,
+          "ok": true
+        },
+        {
+          "step": 8,
+          "tool": "echo",
+          "tokens_in": 128,
+          "tokens_out": 38,
+          "ok": true
+        },
+        {
+          "step": 9,
+          "tool": "echo",
+          "tokens_in": 129,
+          "tokens_out": 39,
+          "ok": true
+        },
+        {
+          "step": 10,
+          "tool": "echo",
+          "tokens_in": 130,
+          "tokens_out": 40,
+          "ok": true
+        }
+      ],
+      "total_steps": 10
+    },
+    "tokens": {
+      "bare_json": 228,
+      "bare_toon": 166,
+      "mcp_json": 248,
+      "mcp_toon": 169
+    },
+    "chars": {
+      "bare_json": 701,
+      "bare_toon": 545,
+      "mcp_json": 898,
+      "mcp_toon": 550
+    },
+    "savings": {
+      "toon_vs_json": 27.2,
+      "mcp_toon_vs_mcp_json": 31.9,
+      "chars_toon_vs_json": 22.3,
+      "chars_mcp_toon_vs_json": 38.8
+    }
+  }
+]
